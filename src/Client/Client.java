@@ -21,21 +21,21 @@ public class Client {
 				BufferedReader serverMessageReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 				System.out.println("Welcome to the chat client please enter some text " + screenName);
-				BufferedReader UserIn = new BufferedReader(new InputStreamReader(System.in));
+				BufferedReader userIn = new BufferedReader(new InputStreamReader(System.in));
 				
 				Thread inputThread = new Thread() {
 					public void run() {
 						try {
-							String line = UserIn.readLine();
+							String line = userIn.readLine();
 							while (line != null && !line.equals(".")) {
 			                    out.println(line);
-			                    // line = UserIn.readLine();
+			                    line = userIn.readLine();
 			                    // System.out.println(screenName);
 			                    
 							} // end of while
 							
 							out.close();
-							UserIn.close();
+							userIn.close();
 						} catch (IOException e) {
 							System.out.println("Exception reading user input");
 							e.printStackTrace();
@@ -44,13 +44,13 @@ public class Client {
 				};
 				inputThread.start();
 				
-				
+				// read messsages from server and write to console. problem it was writing to server socket
 				Thread serverMessageInputThread = new Thread() {
 					public void run() {
 						try {
 							String line = serverMessageReader.readLine();
 							while (line != null) {
-			                    out.println(line);
+			                    System.out.println(line);
 			                    line = serverMessageReader.readLine();   
 							} // end of while
 							

@@ -28,11 +28,11 @@ public class ServerThreads extends Thread {
 			while (true) {
 				String inputLine = in.readLine();
 				//System.out.println("inputLine: " + inputLine);
-				System.out.println("Incoming client message");
+				System.out.println("Incoming client message" +'\n');
 				while (inputLine != null) {
-					//out.println("Server " + inputLine);
-					//System.out.println("User - " + userList + " " + inputLine);
-					server.broadcastAll(inputLine);
+					 //out.println("Server " + inputLine);
+					 System.out.println("User - " + userList + " " + inputLine);
+					 server.broadcastAll(inputLine, clientConnection); // message read from client input stream 
 					if(inputLine.equalsIgnoreCase("exit"))
 						break;
 					inputLine = in.readLine();
@@ -51,3 +51,12 @@ public class ServerThreads extends Thread {
 	}
 
 }
+
+
+/// server.(broadcastall.clientconnection
+
+
+
+
+
+
