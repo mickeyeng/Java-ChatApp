@@ -27,14 +27,12 @@ public class ServerThreads extends Thread {
 			out = new PrintWriter(clientConnection.getOutputStream(), true);
 			while (true) {
 				String inputLine = in.readLine();
-				//System.out.println("inputLine: " + inputLine);
-				System.out.println("Incoming client message" +'\n');
+				System.out.println("Incoming client message"); // this is just adding the new line to the server
 				while (inputLine != null) {
-					 //out.println("Server " + inputLine);
-					 System.out.println("User - " + userList + " " + inputLine);
-					 server.broadcastAll(inputLine, clientConnection); // message read from client input stream 
+					 System.out.println(inputLine);
+					 server.broadcastAll(inputLine + "\n", clientConnection); // message read from client input stream // adds a new line after input line 
 					if(inputLine.equalsIgnoreCase("exit"))
-						break;
+						System.exit(0);
 					inputLine = in.readLine();
 				}
 				System.out.println("closing out");
@@ -53,7 +51,7 @@ public class ServerThreads extends Thread {
 }
 
 
-/// server.(broadcastall.clientconnection
+
 
 
 

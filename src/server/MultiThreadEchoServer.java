@@ -13,17 +13,11 @@ public class MultiThreadEchoServer {
 	static ArrayList<Socket> clientConnections;
 	public static ArrayList<String> userList = new ArrayList<String>();
 
-	
-	
-	
 	public static void main(String[] args) throws IOException {
 		new MultiThreadEchoServer().runServer();
 
 	} // end of main
-	
-	
-	
-	
+
 	public void runServer() throws IOException {
 		ServerSocket serverSocket = null;
 		Socket clientConnection = null;
@@ -32,23 +26,28 @@ public class MultiThreadEchoServer {
 		try {
 
 			serverSocket = new ServerSocket(port_p);
-			System.out.println("Waiting for connection.....");
+			System.out.println("Waiting for connection....." + "\n");
 
 			while (true) {
 
 				clientConnection = serverSocket.accept();
 				clientConnections.add(clientConnection);
 				clientNo++; // increments the client number by 1
-				//System.out.println("Connection successful" + "/n");
-				System.out.println("Welcome to Mickey's server...." + InetAddress.getLocalHost() + "\n" + "Client"
-				+ clientNo + "\r\n");
+				// System.out.println("Connection successful" + "/n");
+				// System.out.println("Welcome to Mickey's server...." +
+				// InetAddress.getLocalHost() + "/n" + "Client" + " "
+				// + clientNo + "\r\n");
 
 				Thread t = new Thread(new ServerThreads(clientConnection, userList));
 				t.start();
 
 				userList.add(clientConnection.getInetAddress().toString());
 				System.out.println("New connection..");
+				// System.out.println("\n");
+				System.out.println("Welcome to Mickey's server...." + InetAddress.getLocalHost() + " " + "Client" + " "
+						+ clientNo);
 				System.out.println("Size of UserList: " + userList.size());
+				System.out.println("\n");
 
 			}
 
@@ -64,42 +63,18 @@ public class MultiThreadEchoServer {
 		}
 
 	}
-	
-	
 
-	
-	
-	//save all client output streams and iterate over each connection in the array and write message to out socket
+	// save all client output streams and iterate over each connection in the
+	// array and write message to out socket
 	public void broadcastAll(String message, Socket senderConnection) throws IOException {
 		for (Socket connection : clientConnections) {
 			if (!connection.equals(senderConnection)) {
-				System.out.println("sending message " + message); 
+				System.out.println("sending message to all clients" + "\n");
 				PrintWriter out = new PrintWriter(connection.getOutputStream());
 				out.println(message);
- 				out.flush();
+				out.flush();
 			}
 		}
 	} // close broadcast
-	
-	
-	
-	
-//	public void broadcastAll(String message, Socket clientConnection) {
-//		Iterator<PrintWriter> it = clientOutputStreams.iterator();
-//		while (it.hasNext()) {
-//			try {
-//				PrintWriter out = (PrintWriter) it.next();
-//				System.out.println("sending message " + message); 
-//				out.println(message); // sends to all clients 
-//				out.flush();
-//			} catch (Exception ex) {
-//				ex.printStackTrace();
-//			}
-//
-//		} // end while
-//	} // close broadcast
 
 } // end of class
-
-
-
