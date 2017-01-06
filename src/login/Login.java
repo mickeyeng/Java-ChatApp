@@ -1,90 +1,127 @@
 package login;
 
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+import server.MultiThreadEchoServer;
 
 public class Login {
 
-	ArrayList<Credentials> allUsers = new ArrayList<Credentials>();
+	private JFrame frame;
 
+	/**
+	 * Launch the application.
+	 */
 	public static void main(String[] args) {
-		Login m = new Login();
-		m.displayMainMenu();
-	}
-
-	private void displayMainMenu() {
-		int input = 0;
-		do {
-			System.out.println("Menu Options");
-			System.out.println("[1] Login");
-			System.out.println("[2] Register");
-			System.out.println("[0] Quit");
-			Scanner scan = new Scanner(System.in);
-			input = scan.nextInt();
-
-			if (input == 0) {
-				System.out.println("You chose to quit");
-				System.exit(0);
-			} else if (input == 1) {
-				System.out.println("You chose to login");
-				handleLogin();
-			} else if (input == 2) {
-				System.out.println("You chose to register");
-				register();
-			} else {
-				System.out.println("Invalid input");
-
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Login window = new Login();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
-		} while (input != 0);
+		});
+	}
+	
+	
+	Connection connection;
+	JTextField textField;
+	JTextField textField1;
+	
+	
+	/**
+	 * Create the application.
+	 */
+	public Login() {
+		initialize();
+		connection = sqlConnection.dataBaseConnector();
+		
+		
 	}
 
-	private void handleLogin() {
-		Credentials c = handleCredentiaInput();
-		if (allUsers.contains(c)) {
-			if (allUsers.get(allUsers.indexOf(c)).getPassword().equals(c.getPassword())) {
-				System.out.println("You are succssfully logged in");
-				System.out.println("Here is a list of all users");
-				listUsers();
-			} else {
-				System.out.println("Password incorrect");
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 554, 387);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		JLabel usernamebtn = new JLabel("Username");
+		usernamebtn.setBounds(69, 130, 108, 16);
+		frame.getContentPane().add(usernamebtn);
+		
+		JLabel passwordbtn = new JLabel("Password");
+		passwordbtn.setBounds(69, 171, 92, 16);
+		frame.getContentPane().add(passwordbtn);
+		
+		textField = new JTextField();
+		textField.setBounds(159, 125, 198, 26);
+		frame.getContentPane().add(textField);
+		textField.setColumns(10);
+		
+		JButton loginbtn = new JButton("Login");
+		loginbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Connection connection1 = null;
+				ResultSet rs = null;
+				PreparedStatement pst = null;
+				try {
+					String query;
+					query = "select * from Login where username=? and password=?";
+					// pass the query to the prepared statement
+					pst = connection.prepareStatement(query);
+					pst.setString(1, textField.getText()); // 1 is username value
+					pst.setString(2, textField1.getText()); // 2 is password value It will mask password field can't get text
+					
+					
+					// once query is passed it will store result in rs and the result for rs will increase. if we get one result it will match the username and password and will be correc 
+					rs = pst.executeQuery(); // when the query is excuted the result will be transfered to the rs object
+					int count = 0;
+					while(rs.next()) { 
+						count++; 
+			
+					}
+					if (count == 1 ) { // its 2 because username is 1 and password is 2
+						JOptionPane.showMessageDialog(null, "Username and Password is correct");
+						frame.dispose();
+						MultiThreadEchoServer server = new MultiThreadEchoServer();
+						server.runServer();
+						
+					} else if (count > 2 ) {
+						JOptionPane.showMessageDialog(null, "Duplicate Username and Password");
+					} else {
+						JOptionPane.showMessageDialog(null, "Username and Passwprd is not correct... Please try Again");
+					} 
+					
+					rs.close(); // close the connection with db
+					pst.close(); 
+					
+				} catch(Exception ex) {
+					ex.printStackTrace();
+					
+				}
 			}
-
-		} else {
-			System.out.println("User doens’t exist. Please register");
-		}
+		});
+		loginbtn.setBounds(159, 232, 166, 60);
+		frame.getContentPane().add(loginbtn);
+		
+		textField1 = new JTextField();
+		textField1.setBounds(159, 166, 198, 26);
+		frame.getContentPane().add(textField1);
+		textField1.setColumns(10);
 	}
-
-	private void register() {
-		Credentials c = handleCredentiaInput();
-		if (!allUsers.contains(c)) {
-			allUsers.add(c);
-			System.out.println("Username successfully registered.");
-			listUsers();
-
-		} else {
-			System.out.println("Username is taken. Try again.");
-		}
-	}
-
-	private void listUsers() {
-		for (Credentials c : allUsers) {
-			System.out.println(c.getUsername());
-		}
-	}
-
-	private Credentials handleCredentiaInput() {
-		Credentials c = new Credentials();
-		Scanner scan = new Scanner(System.in);
-
-		System.out.print("Enter Username:");
-		String username = scan.next();
-		System.out.print("Enter Password:");
-		String password = scan.next();
-
-		c.setUsername(username);
-		c.setPassword(password);
-
-		return c;
-	}
-
 }

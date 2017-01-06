@@ -3,6 +3,9 @@ package server;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import Client.Client;
+
 import java.io.*;
 
 public class MultiThreadEchoServer {
@@ -11,7 +14,9 @@ public class MultiThreadEchoServer {
 	public static int clientNo = 0;
 	String result = null;
 	static ArrayList<Socket> clientConnections;
-	public static ArrayList<String> userList = new ArrayList<String>();
+	static ArrayList<String> userList = new ArrayList<String>();
+	static ArrayList<Client> clients = new ArrayList<Client>(); 
+	String message;
 
 	public static void main(String[] args) throws IOException {
 		new MultiThreadEchoServer().runServer();
@@ -43,20 +48,24 @@ public class MultiThreadEchoServer {
 
 				userList.add(clientConnection.getInetAddress().toString());
 				System.out.println("New connection..");
-				// System.out.println("\n");
+				System.out.println("\n");
 				System.out.println("Welcome to Mickey's server...." + InetAddress.getLocalHost() + " " + "Client" + " "
 						+ clientNo);
 				System.out.println("Size of UserList: " + userList.size());
 				System.out.println("\n");
+				
+			
 
 			}
-
+		
+		
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		} finally {
 			try {
 				serverSocket.close();
 			} catch (IOException ioe) {
+				//System.out.println("Connection in use!");
 				ioe.printStackTrace();
 				System.exit(1);
 			}
@@ -64,6 +73,7 @@ public class MultiThreadEchoServer {
 
 	}
 
+	
 	// save all client output streams and iterate over each connection in the
 	// array and write message to out socket
 	public void broadcastAll(String message, Socket senderConnection) throws IOException {
@@ -73,8 +83,27 @@ public class MultiThreadEchoServer {
 				PrintWriter out = new PrintWriter(connection.getOutputStream());
 				out.println(message);
 				out.flush();
+				System.out.println("list of client connected" + clientConnections);
 			}
 		}
+		
 	} // close broadcast
+
+	
+	
+	
+//	public void broadcastAllUsers(String message, Socket senderConnection, ArrayList<String> userList) throws IOException {
+//		for (Socket connection : clientConnections) {
+//			if (!connection.equals(senderConnection)) {
+//				System.out.println("sending userList to all clients" + "\n");
+//				PrintWriter out = new PrintWriter(connection.getOutputStream());
+//				out.println(message);
+//				out.flush();
+//			}
+//		}
+//		
+//	}
+//	
+//	
 
 } // end of class

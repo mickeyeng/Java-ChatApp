@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 public class Client {
@@ -12,7 +13,7 @@ public class Client {
 
 	public static void main(String[] args) throws IOException {
 		String screenName = args[0];
-		String host = "localhost";
+		String host = "192.168.1.105";
 		Socket socket = null;
 		try {
 			socket = new Socket(host, port_p);
@@ -36,6 +37,8 @@ public class Client {
 						} // end of while
 						out.close();
 						userIn.close();
+					} catch (SocketException e) {
+						
 					} catch (IOException e) {
 						System.out.println("Exception reading user input");
 						e.printStackTrace();
@@ -57,6 +60,7 @@ public class Client {
 
 						out.close();
 						serverMessageReader.close();
+					} catch (SocketException e) { // socket exception will just exit back to the cmd line once the socket is closed and not print any errors to the console
 					} catch (IOException e) {
 						System.out.println("Exception reading server input");
 						e.printStackTrace();
