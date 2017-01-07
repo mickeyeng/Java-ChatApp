@@ -17,6 +17,7 @@ public class MultiThreadEchoServer {
 	static ArrayList<String> userList = new ArrayList<String>();
 	static ArrayList<Client> clients = new ArrayList<Client>(); 
 	String message;
+	
 
 	public static void main(String[] args) throws IOException {
 		new MultiThreadEchoServer().runServer();
@@ -38,11 +39,7 @@ public class MultiThreadEchoServer {
 				clientConnection = serverSocket.accept();
 				clientConnections.add(clientConnection);
 				clientNo++; // increments the client number by 1
-				// System.out.println("Connection successful" + "/n");
-				// System.out.println("Welcome to Mickey's server...." +
-				// InetAddress.getLocalHost() + "/n" + "Client" + " "
-				// + clientNo + "\r\n");
-
+	
 				Thread t = new Thread(new ServerThreads(clientConnection, userList));
 				t.start();
 
@@ -89,21 +86,5 @@ public class MultiThreadEchoServer {
 		
 	} // close broadcast
 
-	
-	
-	
-//	public void broadcastAllUsers(String message, Socket senderConnection, ArrayList<String> userList) throws IOException {
-//		for (Socket connection : clientConnections) {
-//			if (!connection.equals(senderConnection)) {
-//				System.out.println("sending userList to all clients" + "\n");
-//				PrintWriter out = new PrintWriter(connection.getOutputStream());
-//				out.println(message);
-//				out.flush();
-//			}
-//		}
-//		
-//	}
-//	
-//	
 
 } // end of class

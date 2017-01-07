@@ -7,33 +7,43 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 public class Client {
 	public final static int port_p = 4000;
+	static String input = null;
+	
 
 	public static void main(String[] args) throws IOException {
-		String screenName = args[0];
-		String host = "192.168.1.105";
+	//	String screenName = args[0];
+		String host = "localhost";
 		Socket socket = null;
 		try {
 			socket = new Socket(host, port_p);
 			BufferedReader serverMessageReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-			System.out.println("\n" + "Welcome to the chat client please enter some text " + screenName + "\n");
 			BufferedReader userIn = new BufferedReader(new InputStreamReader(System.in));
+			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+		
+			System.out.println("Please enter a username");			
+			input = userIn.readLine();
+
+			System.out.println("\n" + "Welcome to the chat client please enter some text " + input + "\n");
+			
 
 			Thread inputThread = new Thread() {
 				public void run() {
 					try {
 						String line = userIn.readLine();
 						while (line != null && !line.equals(".")) {
-							out.println(screenName + " " + "--" + " " + line);
+							out.println(input + " " + "--" + " " + line);
 							System.out.println("\n");
 							line = userIn.readLine();
 							if(line.equalsIgnoreCase("exit")) {
 								break;
+							} else if (line.equals("help")) {
+								showHelp();
 							}
-
+							
 						} // end of while
 						out.close();
 						userIn.close();
@@ -41,7 +51,7 @@ public class Client {
 						
 					} catch (IOException e) {
 						System.out.println("Exception reading user input");
-						e.printStackTrace();
+						//e.printStackTrace();
 					}
 				}
 			};
@@ -91,4 +101,17 @@ public class Client {
 		}
 
 	} // end of main
+
+	
+	public static void showHelp() {
+		System.out.println("/n");
+		System.out.println("Here is a list of all availble cmds....");
+		System.out.println("======================================");
+		System.out.println("/clients");
+		System.out.println("exit to quit the App");
+		System.out.println("Force exit is ctrl c to quit back to the cmd line");
+		System.out.println("======================================");
+	}
+	
+	
 } // end of class
