@@ -9,7 +9,7 @@ public class sqlConnection {
 	
 	public static Connection dataBaseConnector() {
 		try {
-			Class.forName("org.sqlite.JDBC");
+			//Class.forName("org.sqlite.JDBC");
 			Connection conn = DriverManager.getConnection("jdbc:sqlite:/Users/mickeyenglish/Desktop/LoginForm2.sqlite");// path of database file
 			return conn;
 			

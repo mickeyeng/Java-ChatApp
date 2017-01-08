@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class Client {
 	public final static int port_p = 4000;
-	static String input = null;
+	static String username = null;
 	
 
 	public static void main(String[] args) throws IOException {
@@ -24,10 +24,9 @@ public class Client {
 			BufferedReader userIn = new BufferedReader(new InputStreamReader(System.in));
 			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 		
-			System.out.println("Please enter a username");			
-			input = userIn.readLine();
+			
 
-			System.out.println("\n" + "Welcome to the chat client please enter some text " + input + "\n");
+			System.out.println("\n" + "Welcome to the chat client please enter some text\n");
 			
 
 			Thread inputThread = new Thread() {
@@ -35,7 +34,7 @@ public class Client {
 					try {
 						String line = userIn.readLine();
 						while (line != null && !line.equals(".")) {
-							out.println(input + " " + "--" + " " + line);
+							out.println(line);
 							System.out.println("\n");
 							line = userIn.readLine();
 							if(line.equalsIgnoreCase("exit")) {

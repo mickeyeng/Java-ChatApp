@@ -73,18 +73,20 @@ public class MultiThreadEchoServer {
 	
 	// save all client output streams and iterate over each connection in the
 	// array and write message to out socket
-	public void broadcastAll(String message, Socket senderConnection) throws IOException {
+	public void broadcastAll(String username, String message, Socket senderConnection) throws IOException {
 		for (Socket connection : clientConnections) {
 			if (!connection.equals(senderConnection)) {
 				System.out.println("sending message to all clients" + "\n");
 				PrintWriter out = new PrintWriter(connection.getOutputStream());
-				out.println(message);
+				out.println(username + ": " + message);
 				out.flush();
 				System.out.println("list of client connected" + clientConnections);
 			}
 		}
 		
 	} // close broadcast
+	
+	
 
 
 } // end of class
