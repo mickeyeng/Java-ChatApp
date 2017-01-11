@@ -17,11 +17,11 @@ public class MultiThreadEchoServer {
 	static ArrayList<String> userList = new ArrayList<String>();
 	static ArrayList<Client> clients = new ArrayList<Client>(); 
 	String message;
-	
+	ServerSocket serverSocket;
+	Socket clientConnection;
 
 	public static void main(String[] args) throws IOException {
-		new MultiThreadEchoServer().runServer();
-
+		new MultiThreadEchoServer().runServer();		
 	} // end of main
 
 	public void runServer() throws IOException {
@@ -35,13 +35,18 @@ public class MultiThreadEchoServer {
 			System.out.println("Waiting for connection....." + "\n");
 
 			while (true) {
-
+				
 				clientConnection = serverSocket.accept();
 				clientConnections.add(clientConnection);
 				clientNo++; // increments the client number by 1
-	
+				
+				
+				
+				
+				
 				Thread t = new Thread(new ServerThreads(clientConnection, userList));
 				t.start();
+				
 
 				userList.add(clientConnection.getInetAddress().toString());
 				System.out.println("New connection..");
@@ -54,6 +59,8 @@ public class MultiThreadEchoServer {
 			
 
 			}
+			
+			
 		
 		
 		} catch (IOException ioe) {
@@ -69,7 +76,11 @@ public class MultiThreadEchoServer {
 		}
 
 	}
-
+	
+	
+	
+	
+	
 	
 	// save all client output streams and iterate over each connection in the
 	// array and write message to out socket
@@ -80,13 +91,23 @@ public class MultiThreadEchoServer {
 				PrintWriter out = new PrintWriter(connection.getOutputStream());
 				out.println(username + ": " + message);
 				out.flush();
-				System.out.println("list of client connected" + clientConnections);
-			}
+				//System.out.println("list of client connected" + clientConnections);
+			} 
 		}
 		
 	} // close broadcast
 	
+	// Send message from server to client
+		public void sendFromServer() throws IOException {
+			PrintWriter out = new PrintWriter(clientConnection.getOutputStream(), true);
+			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+			String line = in.readLine();
+			while (line != null && !line.equals(".")) {
+				out.println(line);
+				line = in.readLine();
+				
+		}
+	}
+
 	
-
-
 } // end of class

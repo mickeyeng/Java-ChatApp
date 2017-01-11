@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,6 +32,9 @@ public class ServerThreads extends Thread {
 			in = new BufferedReader(new InputStreamReader(clientConnection.getInputStream()));
 			out = new PrintWriter(clientConnection.getOutputStream(), true);
 			while (true) {
+				
+				
+				
 				String inputLine = in.readLine();
 				System.out.println("Incoming client message");
 
@@ -55,7 +57,7 @@ public class ServerThreads extends Thread {
 							break;
 						}
 						
-						
+						System.out.println(userList());
 
 					}
 					inputLine = in.readLine();
@@ -71,6 +73,8 @@ public class ServerThreads extends Thread {
 
 	}
 	// End of Run Server
+	
+
 
 	// Close streams
 	public void closeConnections() {
@@ -88,5 +92,14 @@ public class ServerThreads extends Thread {
 		}
 
 	} // END of close streams
+	
+	
+	public String[] userList() {
+		String[] names = new String[userList.size()];
+		for (int i = 0; i < userList.size(); ++i) {
+			names[i] = userList.get(i);
+		}
+		return names;
+	}
 
 }
