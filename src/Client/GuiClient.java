@@ -2,6 +2,7 @@ package Client;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -16,12 +17,15 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JList;
 import javax.swing.JEditorPane;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class GuiClient extends JFrame {
 
@@ -56,7 +60,7 @@ public class GuiClient extends JFrame {
 					client.startRunning();
 					InputThread();
 					GuiClient frame = new GuiClient();
-					// GuiClient frame1 = new GuiClient();
+					
 					
 					frame.setVisible(true);
 
@@ -110,14 +114,7 @@ public class GuiClient extends JFrame {
 		btnExit.setBackground(Color.BLUE);
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					closeConnection();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				// System.exit(1);
-
+				System.exit(1);
 			}
 		});
 		btnExit.setBounds(677, 528, 117, 29);
@@ -129,6 +126,25 @@ public class GuiClient extends JFrame {
 		
 
 		writeMessageBox = new JTextField();
+		writeMessageBox.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER)
+	            {
+					try {
+						out.println(writeMessageBox.getText());
+						message = writeMessageBox.getText();
+						out.flush();
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+
+					writeMessageBox.setText(""); // once message has sent from text
+													// area will set box to null
+					showMessagesBox.append("\n" + message);
+	            }
+			}
+		});
 		writeMessageBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -137,12 +153,17 @@ public class GuiClient extends JFrame {
 		writeMessageBox.setBounds(0, 511, 558, 61);
 		contentPane.add(writeMessageBox);
 		writeMessageBox.setColumns(10);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(6, 42, 547, 457);
+		contentPane.add(scrollPane);
 
 		showMessagesBox = new JTextArea();
+		scrollPane.setViewportView(showMessagesBox);
 		showMessagesBox.setEditable(false);
 		showMessagesBox.setBackground(Color.WHITE);
-		showMessagesBox.setBounds(6, 42, 547, 457);
-		contentPane.add(showMessagesBox);
+
+		
 		
 		JEditorPane dtrpnHelpCommands = new JEditorPane();
 		dtrpnHelpCommands.setToolTipText("");
@@ -215,7 +236,7 @@ public class GuiClient extends JFrame {
 
 					} // end of while
 					out.close();
-					userIn.close();
+					in.close();
 				} catch (SocketException e) {
 
 				} catch (IOException e) {

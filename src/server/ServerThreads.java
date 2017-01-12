@@ -57,7 +57,7 @@ public class ServerThreads extends Thread {
 							break;
 						}
 						
-						System.out.println(userList());
+						
 
 					}
 					inputLine = in.readLine();

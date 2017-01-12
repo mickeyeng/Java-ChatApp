@@ -14,6 +14,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import Client.Client;
+import Client.GuiClient;
+
 import javax.swing.JPasswordField;
 
 public class Login {
@@ -99,8 +101,8 @@ public class Login {
 					if (count == 1 ) { // its 2 because username is 1 and password is 2
 						JOptionPane.showMessageDialog(null, "Username and Password is correct");
 						frame.dispose();
-						Client client = new Client();
-						client.main(null); // run the main from the client class
+						//Client client = new Client();
+						GuiClient.main(null); // run the main from the client class
 						
 					} else if (count > 2 ) {
 						JOptionPane.showMessageDialog(null, "Duplicate Username and Password");
